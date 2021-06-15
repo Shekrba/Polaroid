@@ -5,6 +5,8 @@ import Web.Controller.Prelude
 import Web.View.Layout (defaultLayout)
 
 -- Controller Imports
+import Web.Controller.Comments
+import Web.Controller.Likes
 import Web.Controller.Follows
 import Web.Controller.Posts
 import Web.Controller.Users
@@ -18,6 +20,8 @@ instance FrontController WebApplication where
         [ startPage WelcomeAction
         , parseRoute @SessionsController
         -- Generator Marker
+        , parseRoute @CommentsController
+        , parseRoute @LikesController
         , parseRoute @FollowsController
         , parseRoute @PostsController
         , parseRoute @UsersController

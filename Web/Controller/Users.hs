@@ -1,7 +1,6 @@
 module Web.Controller.Users where
 
 import Web.Controller.Prelude
-import Web.View.Users.Index
 import Web.View.Users.New
 import Web.View.Users.Edit
 import Web.View.Users.Show
@@ -41,7 +40,14 @@ instance Controller UsersController where
                     |> fetchOneOrNothing
             Nothing -> do
                 return (Nothing)
-                    
+
+        numOfFollowers :: Int <- query @Follow
+            |> filterWhere (#userId, userId)
+            |> fetchCount
+
+        numOfFollowings :: Int <- query @Follow
+            |> filterWhere (#followerId, userId)
+            |> fetchCount    
 
         render ShowView { .. }
 

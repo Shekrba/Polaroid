@@ -33,8 +33,7 @@ data UsersController
     deriving (Eq, Show, Data)
 
 data PostsController
-    = PostsAction
-    | NewPostAction
+    = NewPostAction
     | ShowPostAction { postId :: !(Id Post) }
     | CreatePostAction
     | EditPostAction { postId :: !(Id Post) }
@@ -43,12 +42,19 @@ data PostsController
     deriving (Eq, Show, Data)
 
 data FollowsController
-    = FollowsAction
-    | NewFollowAction
-    | ShowFollowAction { followId :: !(Id Follow) }
-    | CreateFollowAction
-    | EditFollowAction { followId :: !(Id Follow) }
-    | UpdateFollowAction { followId :: !(Id Follow) }
+    = CreateFollowAction
     | DeleteFollowAction { followId :: !(Id Follow) }
     deriving (Eq, Show, Data)
 
+
+data LikesController
+    = CreateLikeAction
+    | DeleteLikeAction { likeId :: !(Id Like) }
+    deriving (Eq, Show, Data)
+
+data CommentsController
+    = CreateCommentAction
+    | EditCommentAction { commentId :: !(Id Comment) }
+    | UpdateCommentAction { commentId :: !(Id Comment) }
+    | DeleteCommentAction { commentId :: !(Id Comment) }
+    deriving (Eq, Show, Data)

@@ -10,7 +10,7 @@ instance View WelcomeView where
 |]
 
 renderFeed user postsUsers
-    | null user = [hsx|
+    | null user || length postsUsers == 0 = [hsx|
             <div class="bg-dark" style="padding-top: 2rem; padding-bottom: 2rem; color:hsla(196, 13%, 96%, 1); border-radius: 4px">
                 <div style="max-width: 800px; margin-left: auto; margin-right: auto">
                     <h1 style="margin-bottom: 2rem; font-size: 2rem; font-weight: 300; border-bottom: 1px solid white; padding-bottom: 0.25rem; border-color: hsla(196, 13%, 60%, 1)">
@@ -24,16 +24,7 @@ renderFeed user postsUsers
                     <p style="margin-top: 1rem; font-size: 1.75rem; font-weight: 600; color:hsla(196, 13%, 80%, 1)">
                         In photography there is a reality so subtle that it becomes more real than reality.
                     </p>
-                    <div class="row ml-1">
-                        <a href={NewSessionAction} class="btn btn-secondary">
-                            Login
-                        </a>
-                    </div>
-                    <div class="row mt-3 ml-1">
-                        <a href={NewUserAction} class="btn btn-success">
-                            Create Account
-                        </a>
-                    </div>
+                    {renderLoginButtons user}
                 </div>
             </div>
 
@@ -53,6 +44,22 @@ renderFeed user postsUsers
         </div>
         { forEach postsUsers renderPosts }
     |]
+
+
+renderLoginButtons user
+    | null user = [hsx|
+            <div class="row ml-1">
+                <a href={NewSessionAction} class="btn btn-secondary">
+                    Login
+                </a>
+            </div>
+            <div class="row mt-3 ml-1">
+                <a href={NewUserAction} class="btn btn-success">
+                    Create Account
+                </a>
+            </div>
+        |]
+    | otherwise = [hsx||]
 
 renderPosts postUser = do 
     [hsx|

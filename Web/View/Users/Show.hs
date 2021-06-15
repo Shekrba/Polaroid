@@ -2,7 +2,7 @@ module Web.View.Users.Show where
 import Web.View.Prelude
 import Data.Maybe
 
-data ShowView = ShowView { user :: User, posts :: [Post] , follow :: Maybe Follow }
+data ShowView = ShowView { user :: User, posts :: [Post] , follow :: Maybe Follow, numOfFollowers :: Int, numOfFollowings :: Int }
 
 instance View ShowView where
     html ShowView { .. } = [hsx|
@@ -14,9 +14,17 @@ instance View ShowView where
                     <img class="large-profile-image center" src={fromJust (get #pictureUrl user)}/>
                     <h3 class="center">{get #firstName user <> " " <> get #lastName user}</h3>
                     <p class="text-secondary center">{get #email user}</p>
-                    <div class="ml-auto mr-auto">
-                        {rederFollowButtons user follow}
-                    </div>
+                    <table class="table table-striped table-dark"> 
+                        <tr>
+                            <th>Followers</th>
+                            <th>Following</th>
+                            {rederFollowButtons user follow}
+                        </tr>
+                        <tr>
+                            <td>{numOfFollowers}</td>
+                            <td>{numOfFollowings}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <div class="col">
@@ -53,18 +61,22 @@ instance View ShowView where
             rederFollowButtons user follow
                 | not(null currentUserOrNothing) && null follow && (get #id currentUser) /= (get #id user) = 
                     [hsx|
-                        <form method="POST" action={CreateFollowAction}>
-                            <div class="form-group">
-                                <input name="userId" value={show (get #id user)} type="hidden" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <input name="followerId" value={show (get #id currentUser)} type="hidden" class="form-control"/>
-                            </div>
-                            <button type="submit" class="btn btn-dark">Follow</button>
-                        </form>
+                        <th rowspan="2">
+                            <form method="POST" action={CreateFollowAction}>
+                                <div class="form-group">
+                                    <input name="userId" value={show (get #id user)} type="hidden" class="form-control" />
+                                </div>
+                                <div class="form-group">
+                                    <input name="followerId" value={show (get #id currentUser)} type="hidden" class="form-control"/>
+                                </div>
+                                <button type="submit" class="btn btn-light">Follow</button>
+                            </form>
+                        </th>
                     |]
                 | not(null currentUserOrNothing) && not(null follow) && (get #id currentUser) /= (get #id user) =
                     [hsx|
-                        <a href={DeleteFollowAction (get #id (fromJust follow))} class="js-delete js-delete-no-confirm mt-3 btn btn-outline-dark ml-auto mr-auto">Unfollow</a>
+                        <th rowspan="2">
+                            <a href={DeleteFollowAction (get #id (fromJust follow))} class="js-delete js-delete-no-confirm mt-3 btn btn-outline-light ml-auto mr-auto">Unfollow</a>
+                        </th>
                     |]
                 | otherwise = [hsx||]

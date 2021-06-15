@@ -1,17 +1,11 @@
 module Web.Controller.Posts where
 
 import Web.Controller.Prelude
-import Web.View.Posts.Index
 import Web.View.Posts.New
 import Web.View.Posts.Edit
 import Web.View.Posts.Show
-import Web.View.Static.Welcome
 
 instance Controller PostsController where
-    action PostsAction = do
-        posts <- query @Post |> fetch
-        render IndexView { .. }
-
     action NewPostAction = do
         let post = newRecord
                 |> set #userId currentUserId
@@ -20,6 +14,26 @@ instance Controller PostsController where
     action ShowPostAction { postId } = do
         post <- fetch postId
         user <- fetch (get #userId post)
+        like <- case currentUserOrNothing of
+            Just currentUser -> do
+                query @Like
+                    |> filterWhere (#userId, currentUserId)
+                    |> filterWhere(#postId, postId)
+                    |> fetchOneOrNothing
+            Nothing -> do
+                return (Nothing)
+        numOfLikes :: Int <- query @Like
+            |> filterWhere (#postId, postId)
+            |> fetchCount
+        numOfComments :: Int <- query @Comment
+            |> filterWhere (#postId, postId)
+            |> fetchCount
+        comments <- query @Comment
+            |> filterWhere (#postId, postId)
+            |> orderByDesc #createdAt
+            |> fetch
+            >>= collectionFetchRelated #userId
+
         render ShowView { .. }
 
     action EditPostAction { postId } = do

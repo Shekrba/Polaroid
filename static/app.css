@@ -36,8 +36,19 @@
 
 .post-image-large {
   max-height: 650px;
-  max-width: 1110px;
-  width: auto;
+  max-width: 650px;
+}
+
+.comments {
+  width: 650px;
+}
+
+.enter-comment {
+  width: 680px;
+}
+
+.small-button-text {
+  font-size: 13px;
 }
 
 .post-image-feed {
@@ -92,6 +103,15 @@
   white-space: pre-line;
 }
 
-.margin-left {
-  margin-left: 276px;
+table {
+  border-bottom-left-radius: 10px 10px;
+  border-bottom-right-radius: 10px 10px;
+}
+
+.brightness {
+  filter: brightness(10);
+}
+
+.darkness {
+  filter: brightness(0);
 }
